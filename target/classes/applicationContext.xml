@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- spring的主配置文件 -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd ">
+	
+	<!-- 读取外部配置文件db.properties -->
+	<context:property-placeholder location="db.properties"/>
+	<!-- 配置c3p0连接池 -->
+	<bean name="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driverClass}"/>
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
+		<property name="user" value="${jdbc.user}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	
+	<!-- 配置mybatis的sqlSessionFactory -->
+	<bean id="SqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>  <!-- 配置数据源 -->
+		<!-- 告诉spring：mybatis的核心配置文件  -->
+		<property name="configLocation" value="classpath:sqlMapConfig.xml"/> 
+	</bean>
+	
+	<!-- mapper动态代理开发【需要一个接口和Mapper.xml文件】  -->
+	<!-- class = MapperFactoryBean动态生成想想要的实现类mapper：取代以下代码【见MapperTest】：
+			String resource = "sqlMapConfig.xml";
+			//读取mybatis主配置文件
+			InputStream in = Resources.getResourceAsStream(resource );
+			
+			//需要sqlSessionFactoryBulider并且创建sqlSessionfactory
+			SqlSessionFactory ssf = new SqlSessionFactoryBuilder().build(in);
+			 
+			//生产一个sqlSession
+			SqlSession session = ssf.openSession();
+			
+			UserMapper mapper = session.getMapper(UserMapper.class); //获取对应接口的mapper
+	 -->
+	<bean id="adminMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!-- 注入sqlSessionFactory【见上上方】 -->
+		<property name="sqlSessionFactory" ref="SqlSessionFactoryBean"/>
+		<!-- 配置(要实例化的)接口 -->
+		<property name="mapperInterface" value="com.mine.mapper.AdminMapper"/>
+	</bean>
+	
+	<!-- mapper动态扫描开发【对比以上可以配置多个接口！！！】还是需要配置sqlSessionFactory，但是以下不需注入 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.mine.mapper"/> <!-- value="mapper所在的全包名" -->
+	</bean> 
+	
+	
+</beans>
+
+

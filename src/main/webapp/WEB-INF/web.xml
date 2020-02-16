@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" 
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+ 
+<!-- 	<servlet> -->
+<!--         <servlet-name>downloadServlet</servlet-name> -->
+<!--         <servlet-class> -->
+<!--             com.mine.controller.DownloadServlet -->
+<!--         </servlet-class> -->
+<!--         <load-on-startup>3</load-on-startup> -->
+<!--     </servlet> -->
+<!--     <servlet-mapping> -->
+
+<!--         <servlet-name>downloadServlet</servlet-name>  -->
+<!--         <url-pattern>*/downloadZip</url-pattern> -->
+<!--     </servlet-mapping> -->
+    
+    
+<!--     <servlet> -->
+<!--         <servlet-name>testServlet</servlet-name> -->
+<!--         <servlet-class> -->
+<!--             com.mine.controller.TestServlet -->
+<!--         </servlet-class> -->
+<!--         <load-on-startup>3</load-on-startup> -->
+<!--     </servlet> -->
+<!--     <servlet-mapping> -->
+<!--     servlet-name与以上servlet的 servlet-name一致！！！ -->
+<!--         <servlet-name>testServlet</servlet-name>  -->
+<!--         <url-pattern>*/download</url-pattern> -->
+<!--     </servlet-mapping> -->
+
+</web-app>

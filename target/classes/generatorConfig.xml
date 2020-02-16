@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+  <!-- 配置数据库连接的包 -->
+<!--   <classPathEntry location="/Program Files/IBM/SQLLIB/java/db2java.zip" />  -->
+  
+  <!--【context】需要指定一种环境。 id：唯一的，自己取名。targetRuntime:运行环境 -->
+  <context id="MyGererator" targetRuntime="MyBatis3">
+<!--   	  <property name="javaFileEncoding" value="UTF-8"/>	 -->
+  	
+	  <!--【以下配置一些属性】 这个标签可以去掉注释 -->
+	  <commentGenerator>
+		  <!-- 去掉注释 -->
+		  	<property name="suppressAllComments" value="true"/>
+		  <!-- 去掉时间戳！！！！！！！ -->
+		  	<property name="suppressDate" value="true"/>
+	  </commentGenerator>
+	  
+	  
+	  <!-- 【数据库连接信息】 -->
+		<!-- 数据库连接配置的connectionURL不能直接使用&,需将“&”改为“&amp;”。。吐血 -->
+	    <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"   
+	        connectionURL="jdbc:mysql://localhost:3306/assign_sub_system?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=true&amp;serverTimezone=GMT-8"
+	        userId="root"
+	        password="123456">  
+	    </jdbcConnection>
+	
+	  <!-- JAVA JDBC数据类型转换 【见官网：XML配置表->里面对应标签】此处无视：-->
+	    <javaTypeResolver >
+	      <property name="forceBigDecimals" value="false" />
+	    </javaTypeResolver>
+	
+	
+	  <!--【重点！！！javaBean配置】  javaModelGenerator:javaBean配置
+		***targetPackage:输出包名 输出路径
+		***targetProject:输出项目位置 -->
+	    <javaModelGenerator targetPackage="com.mine.bean" targetProject="src/main/java">
+		    <!-- enableSubPackages是否允许子包:是否开启子包名称 是否在包名后边加上scheme名称 -->
+              <property name="enableSubPackages" value="true" />
+            <!-- 是否对modal添加构造函数 -->
+              <property name="constructorBased" value="true" />
+		    <!-- 是否清理从数据库中查询出的字符串左右两边的空白字符trimStrings:在bean包的Set方法中加入.trim ==>若Bean类中的属性值不为空，可以去掉空格-->
+		      <property name="trimStrings" value="true" />
+	    </javaModelGenerator>
+	
+	  <!--【XML配置】 mapper.xml -->
+	    <sqlMapGenerator targetPackage="com.mine.mapper"  targetProject="src/main/java">
+	      <property name="enableSubPackages" value="true" />
+	    </sqlMapGenerator>
+	
+	  <!--【java接口 】  -->
+	    <javaClientGenerator type="XMLMAPPER" targetPackage="com.mine.mapper"  targetProject="src/main/java">
+	      <property name="enableSubPackages" value="true" />
+	    </javaClientGenerator>
+	
+	  <!--【 数据表（至少要一个） 】 要根据数据库中的表来生成  -->
+		<table tableName="assess"/>  <!-- 最基本属性：tableName，必须要有 -->
+		<table tableName="assignmentlist"/>
+		<table tableName="admin"/>
+	    <!-- <table schema="DB2ADMIN" tableName="ALLTYPES" domainObjectName="Customer" >
+	      <property name="useActualColumnNames" value="true"/>
+	      <generatedKey column="ID" sqlStatement="DB2" identity="true" />
+	      <columnOverride column="DATE_FIELD" property="startDate" />
+	      <ignoreColumn column="FRED" />
+	      <columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" />
+	    </table> -->
+	    
+    
+  </context>
+</generatorConfiguration>

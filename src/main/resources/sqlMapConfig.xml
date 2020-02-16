@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!-- Mybatis的主配置文件 -->
+<configuration>
+
+<!-- properties： 读取配置文件 【推荐！~~读取外部配置文件来加载属性】 -->
+<!-- 	<properties resource="db.properties"/>   resource:读本地的文件 -->
+	
+	<!--  推荐使用package包的形式来配置别名
+			包的形式会扫描主包及子包下的所有文件
+			以对象类名为别名，大小写不限，推荐使用小写
+	 -->
+	 <!-- typeAliases：类型别名。简化自定义的类型 -->
+	<typeAliases>
+		<!-- 	<typeAlias type="com.sikiedu.bean.User" alias="user"/> --> <!--只能自定义一个type：全包名。alias:自定义名字  -->
+		<package name="com.mine.bean"/> <!--自定义一堆别名。name:欲自定义类型所在的包。之后【在mapper.xml中】这个包里面的类都按其类名来设置别名，大小写无关  -->
+	</typeAliases>
+	
+ 
+<!-- environments:用于配置一些连接数据库的 -> -->
+<!--  在集成spring 时不用  -->
+<!--   <environments default="development"> -->
+<!--     <environment id="development"> -->
+<!--     使用jdbc的事务 -->
+<!--       <transactionManager type="JDBC"/> 使用事务管理 -->
+<!--       使用连接池 连接数据库！~~~~~~ -->
+<!--       <dataSource type="POOLED"> 数据源 -->
+<!--         <property name="driver" value="${jdbc.driver}"/>  有读取配置文件db.properties才可以读取里面的值 -->
+<!--         <property name="url" value="${jdbc.url}"/> -->
+<!--         <property name="username" value="${jdbc.username}"/> -->
+<!--         <property name="password" value="${jdbc.password}"/> -->
+<!--       </dataSource> -->
+<!--     </environment> -->
+<!--   </environments> -->
+  
+  
+  <!--mappers： 配置映射器的位置 -->
+  <mappers> 
+  	<!-- <mapper resource="mapper/UserMapper.xml"/> -->  <!--【1.相对路径】 资源的路径，去找需要的mapper的文件的路径【右键->copy Qualified】，当ctrl点击路径可以跳转就成 -->
+   	<!-- <mapper url="file:\\\D:\Work\Siki_edu\JavaEE\Teach\SSM框架\ssm_project\ssm_mybatis\src\mapper\UserMapper.xml"/> --><!--【2.全路径】  -->
+   		<!-- 【3.接口形式：接口的全包名。在接口UserMapper.java下的UserMapper,右键：copy Qual】。【Ps:接口对应的xml文件要放在同一个包下，并且名字要相同】 -->
+   	<!-- <mapper class="com.xxx.mapper.UserMapper"/> -->
+   	<!-- (以上三个只能单独配置)推荐使用包的形式配置(多个一起配置) -->
+   	<!-- 【4.包的形式】name:动态代理开发接口所在的全包名【Ps:接口对应的xml文件要放在同一个包下，并且名字要相同】  -->
+   	<package name="com.mine.mapper"/>
+  </mappers>
+   	
+  
+  
+</configuration>
