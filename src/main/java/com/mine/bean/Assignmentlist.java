@@ -14,6 +14,24 @@ public class Assignmentlist {
     private String document;  //文件（路径）
     private String review = "审核中";    //评审状态
 
+
+	public Assignmentlist(Integer subId, String sid, String sname, Date subDate, String idenCode, String document) {
+        this.subId = subId;
+		this.sid = sid;
+        this.sname = sname;
+        this.subDate = subDate;
+        this.idenCode = idenCode;
+        this.document = document;
+    }
+	
+	public Assignmentlist(String sid, String sname, Date subDate, String idenCode, String document) {
+        this.sid = sid;
+        this.sname = sname;
+        this.subDate = subDate;
+        this.idenCode = idenCode;
+        this.document = document;
+    }
+	
 	public String getreview() {
 		return review;
 	}
@@ -21,13 +39,11 @@ public class Assignmentlist {
 	public void setreview(String review) {
 		this.review = review;
 	}
-
-	public Assignmentlist(String sid, String sname, Date subDate, String idenCode, String document) {
+	
+	public Assignmentlist(String sid, Date subDate, String idenCode) {
         this.sid = sid;
-        this.sname = sname;
         this.subDate = subDate;
         this.idenCode = idenCode;
-        this.document = document;
     }
 
     public Assignmentlist() {
@@ -92,7 +108,7 @@ public class Assignmentlist {
     
     @Override
 	public String toString() {
-		return "Assignmentlist [ sub_id="+subId + ", sid=" + sid + "!!!, sname=" + sname + ", subDate=" + subDate
+		return "Assignmentlist [ sub_id="+subId + ", sid=" + sid + ", sname=" + sname + ", subDate=" + subDate
 				+ ", idenCode=" + idenCode + "]";
 	}
 

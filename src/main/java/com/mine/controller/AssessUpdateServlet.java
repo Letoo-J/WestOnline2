@@ -26,44 +26,35 @@ public class AssessUpdateServlet extends HttpServlet {
 		doPost(request, response);
 	}
 
-	//鐢╠oPost鏉ヤ慨鏀硅�冩牳淇℃伅
+	//用doPost进行修改后考核信息的提交
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8"); //璁剧疆缂栫爜鏍煎紡
-		System.out.println("hhhhh\n");
+		request.setCharacterEncoding("utf-8"); 
+		                       
 		String idenCode = request.getParameter("idenCode");
-		String showDate = request.getParameter("showDate");
 		String name = request.getParameter("name");
 		String content = request.getParameter("content");
 		String deadline = request.getParameter("deadline");
 		
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");    // 杩欓噷濉啓鐨勬槸鎯宠杩涜杞崲鐨勬椂闂存牸寮�
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");  //设置输入时间格式
 		Date deadline2 = null;
-		Date showDate2 = null;
 		try{
 			if(deadline != null) {
 				deadline2 = format.parse(deadline);
 			}
-			showDate2 = format.parse(showDate);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		Assess as = new Assess();
-		as.setidenCode(idenCode);
-		as.setshowDate(showDate2);
-		as.setName(name);
-		as.setContent(content);
-		as.setDeadline(deadline2);
+		Assess as = new Assess(name,content,deadline2,idenCode);
+		
 		
 		AssessService service = new AssessService();
 		boolean isSuccess = service.updateAssess(as);
-		System.out.println(isSuccess);
+		//System.out.println(isSuccess);
 		response.getWriter().append("{\"isSuccess\":"+isSuccess+"}");
 		
 		if(isSuccess) {
-			request.setAttribute("assess", as);
-			//request.getRequestDispatcher("/admin_assess/assess_check_update.jsp").forward(request, response);
-		}else {
-			request.getRequestDispatcher("/admin/get_assess?idenCode="+idenCode).forward(request, response);
+			request.setAttribute("idenCode", idenCode);
+			request.getRequestDispatcher("/admin/assess_check_update.jsp").forward(request, response);
 		}
 
 	}

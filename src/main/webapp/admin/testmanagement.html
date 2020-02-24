@@ -1,0 +1,265 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>考核管理</title>
+    <style type="text/css">
+        *{
+            margin:0;
+            padding: 0;
+            list-style: none;
+            font-size: 12px;
+        }
+        h1{
+            font-size: 20px;
+        }
+        #head{
+            width:998px;
+            height:300px;
+            margin:10px;
+            border:1px solid #eee;
+            overflow: hidden;
+            margin-left: 100px;
+        }
+        .tab{
+            height:40px;
+            position:relative;
+            background-color: rgb(243, 239, 239);
+        }
+        .tab ul{
+            position: absolute;
+            width:1001px;
+            left:-1px;
+        }
+        .tab li{
+            float: left;
+            width:80px;
+            height:39px;
+            line-height: 39px;
+            text-align: center;
+            overflow: hidden;
+            background: #F7F7F7;
+            border-bottom: 1px solid #EEE;
+        }
+        .tab li.select{
+            background: #FFF;
+            border-bottom-color: #FFF;
+            border-left-color: 1px solid #EEE;
+            border-right-color: 1px solid #EEE;
+        }
+        .tab li a:link,.tab li a:visited{
+            text-decoration: none;
+            color:black
+        }
+        .tab li a:hover{
+            color:brown;
+        }
+        .contain1{
+            padding-left: 30px;
+            padding-top: 20px;
+            font-size: 20px;
+        
+        }
+        table {
+            width:100%;
+            border-collapse: collapse;
+        }
+
+        table,td,th {
+            border: 1px solid black;
+        }
+        .page{
+            display: flex;
+        }
+    </style>
+    <script type="text/javascript"  src="http://code.jquery.com/jquery-3.4.1.min.js" ></script>
+    <script>
+
+        //Tab栏切换
+        function $(id){
+            return typeof id==='string'?document.getElementById(id):id;
+        }
+        window.onload=function () {
+            var titles=$('tab').getElementsByTagName('li');
+            var div=$('contain').getElementsByTagName('div');
+            for(var i=0;i<div.length;i++){
+                titles[i].id=i;
+                titles[i].onclick=function(){
+                    for(var j=0;j<div.length;j++){
+                        titles[j].className='';
+                        div[j].style.display='none';
+                    }
+                    this.className='select';
+                    div[this.id].style.display='block';
+                }
+            }
+            
+        }
+
+
+        //发布考核
+        var httpRequest;
+        function neatest() {
+            if(window.XMLHttpRequest) {
+                httpRequest = new XMLHttpRequest();
+            }else if(window.ActiveXObject) {
+                httpRequest = new ActiveXObject();
+            }
+            httpRequest.open("POST", "/SSM-WestOnline2/admin/release_do", true);
+            httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            var tsn=document.getElementById('tsn').value;
+            var tsd=document.getElementById('tsd').value;
+            var ddl=document.getElementById('ddl').value;
+            var content=document.getElementById('content').value;
+            httpRequest.send(JSON.stringify({
+                assesId:tsd,name:tsn,content:content,deadline:ddl
+            }))
+        }
+
+        //加载页面
+        change();
+        function change(){
+            $.ajax({
+                type:"get",
+                url:"/SSM-WestOnline2/admin/assess_managment",
+                dataType:"json",
+                success:function(msg){
+                    var obj=eval("("+msg+")");
+                    var content=" ";  
+                    for(var i=0;i<obj.length;i++){  
+                        content+="<tr>";  
+                        content+="<th>"+obj[i].idenCode+"</th>"; 
+                        content+="<th><a href=\"#\" onclick=\"opendetail()\">"+obj[i].name+"</a></th>"; 
+                        content+="<th>"+obj[i].showDate+"</th>";
+                        content+="<th>"+obj[i].deadline+"</th>";
+                        content+="<th><a href=\"#\" class=\"delete\" onclick=\"dele(this)\">删除</a></th>"; 
+                        content+="</tr>"
+                    }  
+                    document.getElementById("management").innerHTML+=content; 
+            },error:function(a){
+                alert("显示失败");}
+            });
+        }
+
+        删除
+        function dele(now){
+            var p=$(now).parentNode.parentNode.childNodes[0].value;
+            $.ajax({
+                type:"post",
+                url:"/SSM-WestOnline2/admin/assess_delet",
+                data:"idenCode="+p,
+                success(msg){
+                    alert("删除成功");
+                }
+            });
+        }
+
+        //打开详情页面
+        function opendetail(){
+            var p=$(now).parentNode.parentNode.childNodes[0].value;
+            if(window.XMLHttpRequest) {
+                httpRequest = new XMLHttpRequest();
+            }else if(window.ActiveXObject) {
+                httpRequest = new ActiveXObject();
+            }
+            httpRequest.open("POST", "/SSM-WestOnline2/admin/get_assess" , true);
+            httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            httpRequest.send(p);
+            window.open('testdetail.html');
+        }
+
+
+        // //分页
+        // page(1,5);
+        // function page(pg,size){
+        //     var table=document.getElementById("management");
+        //     var num=table.rows.length;
+        //     var total=0;
+        //     var p_size=size;
+        //     if(num/p_size>parseInt(num/p_size)){
+        //         total=parseInt(num/p_size)+1;
+        //     }
+        //     else{
+        //         total=parseInt(num/p_size);
+        //     }
+        //     var current=pg;
+        //     var start=(current-1)*p_size+1;
+        //     var end=current*p_size;
+        //     end=(end>num)?num:end;
+        //     for(var i=1;i<(num+1);i++){
+        //         var row=table.rows[i-1];
+        //         if(i>=start&&i<=end){
+        //             row.style.display="block";
+        //         }
+        //         else{
+        //             row.style.display="none";
+        //         }
+        //     }
+        //     var str="当前第"+current+"页 ";
+        //     if(current>1){
+        //         str+="<li><a href=\"#\" class=\"before\" onclick=\"page("+(current-1)+","+p_size")\">上一页</a></li>";
+        //     }else{
+        //         str+="<li>上一页</li>";
+        //     }
+        //     if(current<total){
+        //         str+="<li><a href=\"#\" class=\"after\" onclick=\"page("+(current+1)+","+p_size")\">下一页</a></li>"
+        //     }else{
+        //         str+="<li>下一页</li>"；
+        //     }
+        //     document.getElementsByClassName("page")[0].innerHTML=str;
+        // }
+
+
+    </script>
+</head>
+
+
+<body>
+    <div style="padding-top: 20px; text-align: center;">
+        <h1>作业管理</h1>
+    </div>
+    <div id="head">
+        <div id="tab" class="tab">
+            <ul>
+                <li class="select"><a href="#">考核发布</a></li>
+                <li><a href="#">考核管理</a></li>
+            </ul>
+        </div>
+        <div id="contain" class="contain">
+            <div class="contain1" style="display: block;">
+                <form action="/SSM-WestOnline2/admin/release_do" method="POST">
+                    考核发布：<br><br>
+                    考核识别码：<input type="text" id="tsd"><br>
+                    考核名称：<input type="text" id="tsn"><br>
+                    考核内容：<textarea rows="5" cols="50" id="content"></textarea><br>
+                    截止时间：<input type="text" id="ddl" value="yyyy-mm-dd"><br><br>
+                    <input type="submit" name="发布" onclick="neatest()"><br>
+                </form>
+            </div>
+            <div id="shift" style="display: none;">
+                <table id="management">
+                    <tr>
+                        <th>考核标识码</th>
+                        <th>考核名称</th>
+                        <th>上传时间</th>
+                        <th>截至时间</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr id="test">
+                        <th>001</th>
+                        <th><a href="#" onclick="opendetail()">html</a></th>
+                        <th>2018.4.4</th>
+                        <th>2019.3.5</th>
+                        <th><a href="#" class="delete" onclick="dele(this)">删除</a></th>
+                    </tr>
+                </table>
+                <ul class="page">
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+
+    
+
+</body>
+</html>

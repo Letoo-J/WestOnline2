@@ -20,7 +20,6 @@
 			async:false,  //async:false同步。true异步方式
 			data:{        //数据：也是一个js对象（里面有键值对）
 				idenCode : "${assess.idenCode }",  //需要加“”
-				showDate : "${assess.DateToString(assess.getshowDate())}",
 				name : document.getElementById("name").value,
 				content : document.getElementById("content").value,
 				deadline : document.getElementById("deadline").value

@@ -20,6 +20,9 @@ public interface AssessMapper {
 	
 	//6.修改更新考核
 	public Integer updateAssess(Assess as); 
+	
+	//7.模糊查询考核
+	public List<Assess> FuzzySearchAS(String data);
  	
 	//按条件查询
     long countByExample(AssessExample example);

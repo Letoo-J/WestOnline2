@@ -19,12 +19,12 @@
 			<hr/> <!-- 下划线 --> 
 			<!-- 客户端路径都使用：【绝对路径】！！！！！！！！！！！ -->
 			<!-- 【相当于"${pageContext.request.contextPath }/login.jsp" 】-->
-			<a href="${pageContext.request.contextPath }/login.jsp">登入</a>
+			<a href="${pageContext.request.contextPath }/loginpage.html">登入</a>
 			<br/>
 		</c:when>
 		<c:otherwise>
 			【当前登入用户】${admin.adminName}<br/>
-			<a href="${pageContext.request.contextPath }/admin_assess/function.jsp">管理员功能选择</a> 
+			<a href="${pageContext.request.contextPath }/admin/testmanagement.html">管理员功能选择</a> 
 			<br/>
 		</c:otherwise>
 	</c:choose>

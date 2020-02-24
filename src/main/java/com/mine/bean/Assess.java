@@ -23,6 +23,12 @@ public class Assess {
         this.idenCode = idenCode;
         this.deadline = deadline;
     }
+	
+	public Assess(String name, String content, Date deadline, String idenCode) {
+        this.name = name;
+        this.content = content;
+        this.deadline = deadline;
+    }
 
     public Assess() {
         super();

@@ -13,16 +13,23 @@ public interface AssignmentlistMapper {
 	public List<Assignmentlist> getTheAssignment(String idenCode);
 	
 	//4.修改更新某个作业的考核状态
-	public void updateReview(@Param("ag")Assignmentlist ag , @Param("review")String review);
+	public Integer updateReview(@Param("subId")Integer subId , @Param("review")String review);
 	
-	//5.
+	//5....
 	int myInsertTest(Assignmentlist record);
+	
+	//6.按照主键删除某个作业：
+    public Integer deleteByPrimaryKey(Integer subId);
+	
+	//7.按照主键删除某些作业：
+	public int deleteByPrimaryKeyList(List<Integer> subId);
+	
 	
     long countByExample(AssignmentlistExample example);
 
     int deleteByExample(AssignmentlistExample example);
 
-    int deleteByPrimaryKey(Integer subId);
+    
 
     int insert(Assignmentlist record);
 
@@ -31,7 +38,8 @@ public interface AssignmentlistMapper {
 
     List<Assignmentlist> selectByExample(AssignmentlistExample example);
 
-    Assignmentlist selectByPrimaryKey(Integer subId);
+    //按照主键sub_id查询作业：
+    public Assignmentlist selectByPrimaryKey(Integer subId);
 
     int updateByExampleSelective(@Param("record") Assignmentlist record, @Param("example") AssignmentlistExample example);
 

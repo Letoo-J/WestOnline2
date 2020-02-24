@@ -1,33 +1,27 @@
 package com.mine.test;
 
-import java.io.File;
 //import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+//import java.util.UUID;
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
-import javax.validation.constraints.Null;
-
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.Test;
-import org.mybatis.generator.api.MyBatisGenerator;
-import org.mybatis.generator.config.Configuration;
-import org.mybatis.generator.config.xml.ConfigurationParser;
-import org.mybatis.generator.internal.DefaultShellCallback;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.mine.bean.Admin;
 import com.mine.bean.Assess;
 import com.mine.bean.Assignmentlist;
-import com.mine.bean.User;
-import com.mine.mapper.*;
-
-
+import com.mine.mapper.AdminMapper;
+import com.mine.mapper.AssessMapper;
+import com.mine.mapper.AssignmentlistMapper;
 
 public class MapperTest {
 
@@ -239,27 +233,27 @@ public class MapperTest {
 	}
 	
 	
-	@Test
-    public void test12(){
-        //准备工作
-        List<User> list = new ArrayList<User>();
-        User user1 = new User();
-        user1.setName("zhangsan");
-        user1.setAge(14);
-        User user2 = new User();
-        user2.setName("lisi");
-        user2.setAge(24);
-        list.add(user1);
-        list.add(user2);
-
-        //转换为Json字符串
-        String string = JSON.toJSONString(list);
-        System.out.println("String为："+string+",其类型为："+string.getClass());
-        //转换为JSONArray
-        JSONArray array = JSON.parseArray(JSON.toJSONString(list));
-        System.out.println("JSONArray为："+array+",其类型为："+array.getClass());
-
-    }
+//	@Test
+//    public void test12(){
+//        //准备工作
+//        List<User> list = new ArrayList<User>();
+//        User user1 = new User();
+//        user1.setName("zhangsan");
+//        user1.setAge(14);
+//        User user2 = new User();
+//        user2.setName("lisi");
+//        user2.setAge(24);
+//        list.add(user1);
+//        list.add(user2);
+//
+//        //转换为Json字符串
+//        String string = JSON.toJSONString(list);
+//        System.out.println("String为："+string+",其类型为："+string.getClass());
+//        //转换为JSONArray
+//        JSONArray array = JSON.parseArray(JSON.toJSONString(list));
+//        System.out.println("JSONArray为："+array+",其类型为："+array.getClass());
+//
+//    }
 	
 	@Test
 	public void Test13() {
@@ -284,4 +278,39 @@ public class MapperTest {
 		System.out.println("update返回 :"+mapper.updateAssess(as));
 	}
 
+	
+	@Test
+	public void Test14() {
+		//读取spring的配置文件
+		ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+				
+		//【动态扫描开发】参数：spring配置文件中bean的value所对应包，其下的接口类
+		AssignmentlistMapper mapper = ac.getBean(AssignmentlistMapper.class);
+		
+		List<Integer> list = new ArrayList<Integer>() ;
+		Collections.addAll(list, 31, 33, 34);
+		
+		
+		System.out.println(mapper.deleteByPrimaryKeyList(list));
+	}
+	
+	
+	@Test
+	public void Test15() {
+		//生成随机考核标识码：
+		//法一：
+		for(int i=0;i<20;i++) {
+			String ss = new Base64().encode((UUID.randomUUID().toString()).getBytes()).toString();
+			ss = ss.replace("[B@", "");
+			System.out.println(ss);
+		}
+		
+		//法二：根据时间戳！不精确 ：此处生成一样的号码！
+		for(int i=0;i<20;i++) {
+			long iden = new Date().getTime();
+			String idenCode = Integer.toHexString((int)iden);
+			System.out.println(idenCode);
+		}
+	}
+	
 }

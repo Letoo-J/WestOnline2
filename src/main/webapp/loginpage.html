@@ -1,0 +1,51 @@
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>登录页面</title>
+    <style type="text/css">
+        .system{
+            margin-left: 400px;
+            margin-top: 100px;
+            height:280px;
+            width:400px;
+            border-style:solid;
+            border-color:slategray;
+            text-align: center;
+            background-color: rgb(221, 221, 221);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="system">
+        <h1>学生作业管理系统</h1>
+       
+        用户名:<input type="text" id="adminName"><br>
+        密码:<input type="password" id="password"><br><br>
+        <button   onclick="login()">登录</button>
+      
+    </div>
+    <script type="text/javascript"  src="http://code.jquery.com/jquery-3.4.1.min.js" ></script>
+    <script>
+    var httpRequest;
+    function login() {
+    	
+    	  $.ajax({
+    	          type:"post",
+              url:"/SSM-WestOnline2/login_do",
+              data:{        
+  				'adminName':adminName.value,
+  				'password':password.value
+  			},
+              success:function(msg){
+            	  window.open('admin/testmanagement.html');
+                 console.log(msg);
+              }
+          })
+    
+    }
+   
+    </script>
+</body>
+</html>

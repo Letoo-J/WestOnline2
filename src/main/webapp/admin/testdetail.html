@@ -1,0 +1,89 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>考核详情</title>
+    <style type="text/css">
+        table {
+            margin-left: 300px;
+            width:50%;
+            border-collapse: collapse;
+        }
+
+        table,td,th {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align: center;">考核详情</h1>
+    <div >
+        <table>
+            <tr><th>考核标识码</th><th id='tid'></th></tr>
+            <tr><th>上传时间</th><th id='uptime'></th></tr>
+            <tr><th>考核名称</th><th><form><input type="text" id='name'></form></th></tr>
+            <tr><th>考核内容</th><th><form><input type="text" id='content'></form></th></tr>
+            <tr><th>截至时间</th><th><form><input type="text" id='deadline'></form></th></tr>
+        </table>
+        <br>
+    </div>    
+    <div style="text-align: center;">
+        <button id='btn' type="button" onclick="update()">修改</button>
+        <a href="testmanagement.html">返回考核主页</a>
+    </div>
+    <script type="text/javascript" src="jquery-1.12.4.js"></script>
+    <script>
+
+        //获取具体信息
+        function gets(){
+            $.ajax({
+                type="get",
+                url="${pageContext.request.contextPath }/admin/assignmentlist”,
+                success:function(msg){
+                    var id=document.getElementById('tid');
+                    var time=document.getElementById('uptime');
+                    var name=document.getElementById('name');
+                    var con=document.getElementById('content');
+                    var ddl=document.getElementById('deadline');
+                    tid.innerHTML=msg.assesId;
+                    uptime.innerHTML=msg.showDate;
+                    name.innerHTML=msg.name;
+                    con.innerHTML=msg.content;
+                    ddl.innerHTML=msg.deadline;
+                }
+            })
+        }
+
+        //修改
+        function update(){
+		$.ajax({  
+			//encodeURI:对整个url进行编码(若url里面有中文。。)
+			//url:要进行请求的资源的地址，用绝对路径.
+			url:encodeURI("${pageContext.request.contextPath }/admin/assess_update"),
+			type:"post",  //请求的方法
+			async:true,  //async:false同步。true异步方式
+			data:{        //数据：也是一个js对象（里面有键值对）
+				idenCode : "${assess.idenCode }",  //需要加“”
+				name : document.getElementById("name").value,
+				content : document.getElementById("content").value,
+				deadline : document.getElementById("deadline").value
+			},
+			cache:false, //去除缓存
+			dataType:"json",  //指定响应得到的数据类型：【msg必须严格为一个json数据！】
+			success:function(msg){  //发起这个ajax请求后成功得到响应（响应内容为msg!）之后,去调用此函数进行处理
+				if(msg.isSuccess){
+					alert("修改成功！");
+					$("#judge").html("<font color='green'>修改成功！</font>");
+				}else{
+					$("#judge").html("<font color='red'>修改失败！</font>");
+				}
+			},
+			error:function(){
+				alert("ajax请求成功但是返回值有问题！！！啊");
+			}
+		});
+	}
+
+    </script>
+</body>
+</html>

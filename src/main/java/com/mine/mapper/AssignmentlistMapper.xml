@@ -4,7 +4,7 @@
 
   <resultMap id="BaseResultMap" type="com.mine.bean.Assignmentlist">
     <constructor>
-      <idArg column="sub_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <idArg column="subId" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="sID" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sName" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="subDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
@@ -24,8 +24,8 @@
 	</select>
 	
 	<!-- 修改更新考核状态 -->
-  	<update id="updateReview" >
-  		update assignmentlist set review = #{review} where sID = #{ag.sid} and subDate = #{ag.subDate}
+  	<update id="updateReview">
+  		update assignmentlist set review = #{review} where subId = #{subId} 
 	</update>
 	
 	<!--【另解】再标签insert中，设置属性useGeneratedKeys="true" keyProperty="subId"  -->
@@ -40,7 +40,36 @@
 	    insert into assignmentlist (sID, sName, subDate, idenCode, document, review)
     	values (#{sid}, #{sname}, #{subDate}, #{idenCode}, #{document}, #{review})
 	</insert>  
-  
+	
+	<!-- 按照主键subId查询作业： -->
+  	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	    select 
+	    <include refid="Base_Column_List" />
+	    from assignmentlist
+	    where subId = #{subId,jdbcType=INTEGER}
+  	</select>
+  	
+  	<!--   6.按照主键删除某个作业： -->
+   <delete id="deleteByExample" parameterType="com.mine.bean.AssignmentlistExample">
+	    delete from assignmentlist
+	    <if test="_parameter != null">
+	      <include refid="Example_Where_Clause" />
+	    </if>
+   </delete>
+   
+   <!--  7.按照主键删除某些作业： -->
+   <!-- 批量删除 -->
+	<delete id="deleteByPrimaryKeyList" parameterType="java.util.List">
+		<!-- delete from emp where empno in(7789,7790) -->
+		<!-- forEach : 用来循环 collection : 用来指定循环的数据的类型 可以填的值有：array,list,map item 
+			: 循环中为每个循环的数据指定一个别名 index : 循环中循环的下标 open : 开始 close : 结束 separator : 数组中元素之间的分隔符 -->
+		delete from assignmentlist where subId in
+		<foreach item="id" collection="list" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -100,7 +129,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    sub_id, sID, sName, subDate, idenCode, document
+    subId, sID, sName, subDate, idenCode, document
   </sql>
   <select id="selectByExample" parameterType="com.mine.bean.AssignmentlistExample" resultMap="BaseResultMap">
     select
@@ -116,24 +145,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from assignmentlist
-    where sub_id = #{subId,jdbcType=INTEGER}
-  </select>
+  
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from assignmentlist
-    where sub_id = #{subId,jdbcType=INTEGER}
+    where subId = #{subId,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.mine.bean.AssignmentlistExample">
-    delete from assignmentlist
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
+  
   <insert id="insert" parameterType="com.mine.bean.Assignmentlist">
-    insert into assignmentlist (sub_id, sID, sName, 
+    insert into assignmentlist (subId, sID, sName, 
       subDate, idenCode, document
       )
     values (#{subId,jdbcType=INTEGER}, #{sid,jdbcType=VARCHAR}, #{sname,jdbcType=VARCHAR}, 
@@ -146,7 +166,7 @@
     insert into assignmentlist
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="subId != null">
-        sub_id,
+        subId,
       </if>
       <if test="sid != null">
         sID,
@@ -203,7 +223,7 @@
     update assignmentlist
     <set>
       <if test="record.subId != null">
-        sub_id = #{record.subId,jdbcType=INTEGER},
+        subId = #{record.subId,jdbcType=INTEGER},
       </if>
       <if test="record.sid != null">
         sID = #{record.sid,jdbcType=VARCHAR},
@@ -228,7 +248,7 @@
   
   <update id="updateByExample" parameterType="map">
     update assignmentlist
-    set sub_id = #{record.subId,jdbcType=INTEGER},
+    set subId = #{record.subId,jdbcType=INTEGER},
       sID = #{record.sid,jdbcType=VARCHAR},
       sName = #{record.sname,jdbcType=VARCHAR},
       subDate = #{record.subDate,jdbcType=TIMESTAMP},
@@ -257,7 +277,7 @@
         document = #{document,jdbcType=VARCHAR},
       </if>
     </set>
-    where sub_id = #{subId,jdbcType=INTEGER}
+    where subId = #{subId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.mine.bean.Assignmentlist">
     update assignmentlist
@@ -266,6 +286,6 @@
       subDate = #{subDate,jdbcType=TIMESTAMP},
       idenCode = #{idenCode,jdbcType=VARCHAR},
       document = #{document,jdbcType=VARCHAR}
-    where sub_id = #{subId,jdbcType=INTEGER}
+    where subId = #{subId,jdbcType=INTEGER}
   </update>
 </mapper>

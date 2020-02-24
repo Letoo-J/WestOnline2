@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,7 +19,6 @@ import com.mine.bean.Assignmentlist;
 import com.mine.mapper.AssignmentlistMapper;
 
 public class AssignmentService {
-    
     
     // 上传配置
     private static final int MEMORY_THRESHOLD   = 1024 * 1024 * 3;  // 3MB
@@ -45,11 +45,30 @@ public class AssignmentService {
 		return mapper.getTheAssignment(idenCode);
 	}
 	
-	//更新某个作业的考核状态：
-	public void updateReview(Assignmentlist ag ,String review) {
-		mapper.updateReview(ag, review);
+	//更新某个作业的考核状态： 
+	public void updateReview(Integer subId ,String review) {
+		mapper.updateReview(subId, review);
 	}
 	
+	//按照主键删除某个作业：
+	public boolean deleteAssinment(Integer subId) {
+		if(mapper.deleteByPrimaryKey(subId) != 0) {
+			return true;
+		}else {
+			return false;
+		}
+	}  
+	
+	//按照主键删除某些作业：
+	public boolean deleteAssinmentList(List<Integer> subId_list) {
+		System.out.println(subId_list);
+		if(subId_list.isEmpty()) return false;
+		if(mapper.deleteByPrimaryKeyList(subId_list) != subId_list.size()) {
+			return true;
+		}else {
+			return false;
+		}
+	}
 	
 	//提交作业：
 	public int submitAssignment(HttpServletRequest request,String sid,String sname,String idenCode,String uploadPath) {
@@ -65,18 +84,14 @@ public class AssignmentService {
          
         // 设置最大文件上传值
         upload.setFileSizeMax(MAX_FILE_SIZE);
-         
         // 设置最大请求值 (包含文件和表单数据)
         upload.setSizeMax(MAX_REQUEST_SIZE);
-        
         // 中文处理
         upload.setHeaderEncoding("UTF-8"); 
 
         // 构造临时路径来存储上传的文件
         // 这个路径相对当前应用的目录
-        
-       
-         
+    
         // 如果目录不存在则创建
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
@@ -85,16 +100,15 @@ public class AssignmentService {
  
         try {
         	 @SuppressWarnings("unchecked")
-           List<FileItem> formItems = upload.parseRequest(request);
-           
- 
-            if (formItems != null && formItems.size() > 0) {
+        	 List<FileItem> formItems = upload.parseRequest(request);
+        	 if (formItems != null && formItems.size() > 0) {
                 // 迭代表单数据
                 for (FileItem item : formItems) {
                     // 处理不在表单中的字段
                     if (!item.isFormField()) {
                         String fileName = new File(item.getName()).getName();
-                        String filePath = uploadPath + File.separator + fileName;
+                        //UUID.randomUUID():利用UUID生成伪随机字符串，作为文件名避免重复
+                        String filePath = uploadPath + UUID.randomUUID()+ fileName;  //uploadPath + File.separator + fileName;               
                  
                         File storeFile = new File(filePath);
                         item.write(storeFile);
@@ -102,23 +116,17 @@ public class AssignmentService {
                         System.out.println("filePath:"+filePath);
                         System.out.println("filename:"+fileName);
                         System.out.println("uploadPath:"+uploadPath);
-                        Assignmentlist ag = new Assignmentlist();
+                        
                 		//得到提交时间Date
                 		Date subDate = new Date();    
                 		Timestamp timeStamp = new Timestamp(subDate.getTime());
                 		
-                		ag.setSid(sid);
-                		ag.setSname(sname);
-                		ag.setsubDate(timeStamp);
-                		ag.setidenCode(idenCode);
-                		ag.setDocument(fileName);
-                		
+                		Assignmentlist ag = new Assignmentlist(sid,sname,timeStamp,idenCode,filePath);
                 		return mapper.insertSelective(ag);
                     }
                 }
             }
         } catch (Exception ex) {
-//   
             return 0;
         }
 		return 0;

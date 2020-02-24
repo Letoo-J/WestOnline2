@@ -7,9 +7,9 @@
 <!-- jquery文件 -->
 <script type="text/javascript"  src="http://code.jquery.com/jquery-3.4.1.min.js" ></script>
 <script type="text/javascript">
-function download(aa){
-	alert(aa);
-    downloadTemplate('${pageContext.request.contextPath }/downloadZip', 'filename', aa);
+function download(filename){
+	//alert(filename);
+    downloadTemplate('${pageContext.request.contextPath }/downloadZip', 'filename', filename);
 }
 
 /**
@@ -83,7 +83,7 @@ function downloadTemplate(action, type, value){
 					</form>
 				</td>
 				<td>
-					<button id="download" style="color:blue" onclick="download('${ag.document}');">下载${ag.document}</botton>
+					<button id="download" style="color:blue" onclick="download('${ag.document}');">下载</botton>
 <%-- 					<a href="${ag.document}" doweload="${ag.document}.zip">下载</a> --%>
 				</td>
 			</tr>

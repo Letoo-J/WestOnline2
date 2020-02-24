@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSON;
 import com.mine.bean.Assignmentlist;
 import com.mine.service.AssignmentService;
 
@@ -26,8 +27,12 @@ public class AssignmentlistServlet extends HttpServlet {
 		String idenCode = request.getParameter("idenCode");
 		
 		List<Assignmentlist> list = new AssignmentService().getTheAssignment(idenCode);
-		request.setAttribute("assignment_list", list);
-		request.getRequestDispatcher("/admin_assess/assignmentlist.jsp").forward(request, response);
+		response.setContentType("text/html; charset=UTF-8");
+		String json = JSON.toJSONString(list); 
+		response.getWriter().print(json);
+		
+		//request.setAttribute("assignment_list", list);
+		//request.getRequestDispatcher("/admin_assess/assignmentlist.jsp").forward(request, response);
 	}
 
 }

@@ -90,4 +90,9 @@ public class AssessService {
 			return false;
 		}
 	}
+	
+	//7.模糊查询考核
+	public List<Assess> FuzzySearchAS(String data){
+		return mapper.FuzzySearchAS(data);
+	}
 }

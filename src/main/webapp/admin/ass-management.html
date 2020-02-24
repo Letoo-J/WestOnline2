@@ -1,0 +1,134 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>学生作业管理页面</title>
+    <style type="text/css">
+        table {
+            width:100%;
+            border-collapse: collapse;
+        }
+
+        table,td,th {
+            border: 1px solid black;
+        }
+        h1{
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript" src="jquery-1.12.4.js"></script>
+    <script>
+        
+        //审核状态改变
+        var httpRequest;
+        function submits(now) {
+            if(window.XMLHttpRequest) {
+                httpRequest = new XMLHttpRequest();
+            }else if(window.ActiveXObject) {
+                httpRequest = new ActiveXObject();
+            }
+            httpRequest.open("POST", "${pageContext.request.contextPath }/admin/assignmentlist”, true);
+            httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            var new1=$(now).parentNode.parentNode.parentNode.childNodes[0].value();
+            httpRequest.send(new1);
+        }
+
+        //删除
+        function dele(now) {
+            if(window.XMLHttpRequest) {
+                httpRequest = new XMLHttpRequest();
+            }else if(window.ActiveXObject) {
+                httpRequest = new ActiveXObject();
+            }
+            httpRequest.open("POST", "${pageContext.request.contextPath }/admin/assess_delet”, true);
+            httpRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            var new1=$(now).parentNode.parentNode.childNodes[0].value();
+            httpRequest.send(new1);
+        }
+
+        //下载
+        function download(filename){
+            //alert(filename);
+            downloadTemplate('${pageContext.request.contextPath }/admin/downloadZip', 'filename', filename);
+        }
+        function downloadTemplate(action, type, value){
+            var form = document.createElement('form');
+            document.body.appendChild(form);
+            form.style.display = "none";
+            form.action = action;
+            form.id = 'zip';
+            form.method = 'post';
+            var newElement = document.createElement("input");  
+            newElement.setAttribute("type","hidden");  
+            newElement.name = type;
+            newElement.value = value;
+            form.appendChild(newElement); 
+            form.submit();
+        }
+
+        //获取列表
+        window.onload=function(){
+            $.ajax({
+                type:"get",
+                url:"${pageContext.request.contextPath }/admin/assignmentlist”,
+                success:function(msg){
+                    var content=" ";  
+                    var obj=eval("("+msg+")");
+                    for(var i=0;i<obj.length;i++){  
+                        content+="<tr>";  
+                        content+="<th>"+obj[i].sid+"</th>"; 
+                        content+="<th>"+obj[i].sname+"</th>";
+                        content+="<th>"+obj[i].subDate+"</th>"; 
+                        content+="<th>"+obj[i].review+"
+                        <form action=\"${pageContext.request.contextPath/review_do } \" name=\"form\"><select name=\"judge\"><option value=\"审核中\">审核中</option><option value=\"通过\">通过</option><option value=\"未通过\">未通过</option></select><input type=\"submit\" name=\"submit\" value=\"提交\" onclick=\"submits()\"></form></th>";
+                        content+="<a href=\"#\" id=\"download\" onclick=\"download(\"${ag.document}\")\">下载</a>";
+                        content+="<th><a href=\"#\" class=\"delete\" onclick=\"dele(this)\">删除</a></th>"; 
+                        content+="</tr>";
+                    }  
+                    document.getElementById("management").innerHTML+=content; 
+                }
+                error:function(xhr){
+                    alert("加载失败");
+                }
+            })
+        }
+        
+
+    </script>
+</head>
+
+<body>
+    <h1>学生作业查看</h1>
+    <table id='management'>
+        <tr>
+            <th>学号</th>
+            <th>学生</th>
+            <th>上传时间</th>
+            <th>状态</th>
+            <th>操作</th>
+            <th>操作</th>>
+        </tr>
+        <tr>
+            <th>031802130</th>
+            <th>wn</th>
+            <th>2019-08-30</th>
+            <th>
+                <form action="${pageContext.request.contextPath/review_do } " name="form">
+                    <select name="judge">
+                        <option value="审核中">审核中</option>
+                        <option value="通过">通过</option>
+                        <option value="未通过">未通过</option>
+                    </select>
+                    <input type="submit" name="submit" value="提交" onclick="submits(this)">
+                </form>
+            </th>
+            <th>
+                <a href="#" id="download" onclick="download('${ag.document}')">下载</a>
+            </th>
+            <th>
+                <a href="#" name="delete" onclick="dele(this)">删除</a>
+            </th>
+        </tr>
+    </table>
+    
+</body>
+</html>

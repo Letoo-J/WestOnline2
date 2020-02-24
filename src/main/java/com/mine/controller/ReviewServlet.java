@@ -1,6 +1,7 @@
 package com.mine.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,7 +18,7 @@ import com.mine.service.AssignmentService;
 /**
  * Servlet implementation class ReviewServlet
  */
-@WebServlet("/review_do")
+@WebServlet("/admin/review_do")
 public class ReviewServlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -25,35 +26,17 @@ public class ReviewServlet extends HttpServlet {
 		doPost(request, response);
 	}
 
-	//用doPost进行评审（修改）
+	//用doPost进行作业评审（修改）：
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8"); //设置编码格式
-		//Assignmentlist ag = (Assignmentlist) request.getAttribute("assignmentlist");
-		//System.out.println("修改的作业："+ag);
-		
-		String sid = request.getParameter("sid");
-		String str_subDate = request.getParameter("subDate");
-		String idenCode = request.getParameter("idenCode");
+		Integer subId = (Integer)request.getAttribute("subId");
 		String review = request.getParameter("review");
 		
 		AssignmentService service = new AssignmentService();
-		//修改审核状态
-		Assignmentlist ag = new Assignmentlist();
+		//修改审核状态:	               
+		service.updateReview(subId, review); 
 		
-		//字符串转化为Date类型:
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");    // 这里填写的是想要进行转换的时间格式
-		Date subDate = null;
-		try{
-			subDate = format.parse(str_subDate);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		ag.setSid(sid);
-		ag.setsubDate(subDate);
-		service.updateReview(ag, review); 
-		
-		request.setAttribute("idenCode", idenCode);
-		request.getRequestDispatcher("/admin/assignmentlist").forward(request, response);
+		//request.setAttribute("idenCode", idenCode);
+		//request.getRequestDispatcher("/admin_assess/assignmentlist.jsp").forward(request, response);
 	}
 
 }

@@ -7,10 +7,10 @@
   
   	<!-- 根据id查询用户  【201-202/301】-->
 	<!-- id="selectAdminByID"：此查询语句的名字，java代码里面便于寻找 -->
-	<!-- parameterType:查询条件a_id的类型. resultType:查询结果的类型. -->
+	<!-- parameterType:查询条件aId的类型. resultType:查询结果的类型. -->
 	<!-- 设置了类型别名所以可以用Admin直接替换com.mine.bean.Admin -->
 	<select id="selectAdminByID" parameterType="Integer" resultType="Admin"> 
-		 select * from admin where a_id = #{id}  <!-- //sql语句，？占位符用#{变量} 来代替，精准查询用“=” -->
+		 select * from admin where aId = #{id}  <!-- //sql语句，？占位符用#{变量} 来代替，精准查询用“=” -->
 	</select>
 	
 	<select id="selectAdminByAP" parameterType="Admin" resultType="Admin"> 
@@ -29,7 +29,7 @@
 	
   <resultMap id="BaseResultMap" type="com.mine.bean.Admin">
     <constructor>
-      <idArg column="a_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <idArg column="aId" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="adminName" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="password" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
@@ -93,7 +93,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    a_id, adminName, password
+    aId, adminName, password
   </sql>
   <select id="selectByExample" parameterType="com.mine.bean.AdminExample" resultMap="BaseResultMap">
     select
@@ -113,11 +113,11 @@
     select 
     <include refid="Base_Column_List" />
     from admin
-    where a_id = #{aId,jdbcType=INTEGER}
+    where aId = #{aId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from admin
-    where a_id = #{aId,jdbcType=INTEGER}
+    where aId = #{aId,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.mine.bean.AdminExample">
     delete from admin
@@ -126,7 +126,7 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.mine.bean.Admin">
-    insert into admin (a_id, adminName, password
+    insert into admin (aId, adminName, password
       )
     values (#{aId,jdbcType=INTEGER}, #{adminName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}
       )
@@ -135,7 +135,7 @@
     insert into admin
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="aId != null">
-        a_id,
+        aId,
       </if>
       <if test="adminName != null">
         adminName,
@@ -166,7 +166,7 @@
     update admin
     <set>
       <if test="record.aId != null">
-        a_id = #{record.aId,jdbcType=INTEGER},
+        aId = #{record.aId,jdbcType=INTEGER},
       </if>
       <if test="record.adminName != null">
         adminName = #{record.adminName,jdbcType=VARCHAR},
@@ -181,7 +181,7 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update admin
-    set a_id = #{record.aId,jdbcType=INTEGER},
+    set aId = #{record.aId,jdbcType=INTEGER},
       adminName = #{record.adminName,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -198,12 +198,12 @@
         password = #{password,jdbcType=VARCHAR},
       </if>
     </set>
-    where a_id = #{aId,jdbcType=INTEGER}
+    where aId = #{aId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.mine.bean.Admin">
     update admin
     set adminName = #{adminName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR}
-    where a_id = #{aId,jdbcType=INTEGER}
+    where aId = #{aId,jdbcType=INTEGER}
   </update>
 </mapper>

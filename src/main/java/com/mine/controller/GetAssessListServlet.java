@@ -30,15 +30,12 @@ public class GetAssessListServlet extends HttpServlet {
 	//响应ajax请求，得到考核列表以显示在下拉菜单栏。
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8"); //设置编码格式
-		//System.out.println("get_AssessList!!!~~~~~~~~~");
 		List<Assess> list=new AssessService().getAllAssesses();
 		
-		//System.out.println("得到考核列表惹！！~~~~~~\n"); 
 		//向submit.jsp传递考核list，并且转化为JSON。
 		response.setContentType("text/html; charset=UTF-8");
 		String json = JSON.toJSONString(list); 
 		response.getWriter().print(json);
-		//System.out.println(json);
 		
 		//以下也可以：
 		//JSONArray array = JSON.parseArray(JSON.toJSONString(list));
