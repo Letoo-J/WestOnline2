@@ -149,7 +149,7 @@
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.18</version>  <!-- 5.1.38 -->
+      <version>8.0.28</version>  <!-- 5.1.38 -->
     </dependency>
     
     <!-- 导入dbcp的jar包，用来在applicationContext.xml中配置数据库 -->
